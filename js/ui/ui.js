@@ -105,8 +105,8 @@ G.UI = (() => {
 
   // PokéSurvivor Plus+: contacto por las incidencias del repositorio del fork
   // (sin publicar ningún correo). El juego original es de JPTER78.
-  const CONTACT = 'https://github.com/oscaroca/pokesurvivor/issues';
-  const REPO = 'https://github.com/oscaroca/pokesurvivor';
+  const CONTACT = 'https://github.com/oscaroca/pokesurvivorplus/issues';
+  const REPO = 'https://github.com/oscaroca/pokesurvivorplus';
   let legalBack = null;
 
   function openLegal() {

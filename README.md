@@ -1,4 +1,15 @@
-# PokéSurvivor · Mundo Misterioso
+# PokéSurvivor Plus+ · Mundo Misterioso
+
+> **PokéSurvivor Plus+** es una versión modificada y no oficial de
+> [PokéSurvivor](https://github.com/JPTER78/pokesurvivor), creado por
+> [JPTER78](https://github.com/JPTER78): la idea, el juego base y casi todo lo
+> que se describe abajo son suyos. Esta versión añade talentos por región,
+> Guardería, Tablas de Arceus, élites, Kecleon y más (ver Novedades en el juego).
+> Mismo licenciamiento (PolyForm Noncommercial 1.0.0) y créditos en
+> [CREDITS.md](CREDITS.md). Gratis y sin ánimo de lucro.
+>
+> - Jugar: https://oscaroca-pokesurvivor.vercel.app
+> - Fallos e ideas: [issues de este repositorio](https://github.com/oscaroca/pokesurvivorplus/issues)
 
 Bullet-heaven con Pokémon al estilo de Survivor.io y Megabonk, con sprites de
 *Pokémon Mundo Misterioso*, capa roguelike, **980 Pokémon de las 9 generaciones**,
