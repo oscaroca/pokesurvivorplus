@@ -99,8 +99,8 @@ G.MenuUI = (() => {
 
     const owned = Object.keys(s.owned).filter(d => G.DEX_BY[d]).length;
     const shinies = Object.keys(s.shiny || {}).length;
-    const eggs = G.DaycareUI.ready(), resP = G.Research.pendingTotal(s);
-    $('menu-dex-count').textContent = eggs ? 'Huevos listos: ' + eggs : resP ? 'Investigación por recoger: ' + resP
+    const eggs = G.DaycareUI.ready(), resP = G.Research.pendingTotal(s) + G.Family.pending(s);
+    $('menu-dex-count').textContent = eggs ? 'Huevos listos: ' + eggs : resP ? 'Premios por recoger: ' + resP
       : `${owned} / ${G.DEX.length}` + (shinies ? ` · ${shinies} shiny` : '');
     $('menu-dex-count').classList.toggle('gold', !!(eggs || resP));
 
@@ -237,8 +237,64 @@ G.MenuUI = (() => {
       c.onclick = () => { dexFilter = k; openDex(); };
       fb.appendChild(c);
     }
+    // Premios por recoger (misiones de familia e investigación): filtro y "Recoger todo".
+    const pend = pendingAll();
+    if (pend || dexFilter === 'claim') {
+      const c = document.createElement('button');
+      c.className = 'chip claim-chip' + (dexFilter === 'claim' ? ' on' : '');
+      c.textContent = 'Por recoger';
+      c.onclick = () => { dexFilter = 'claim'; openDex(); };
+      fb.appendChild(c);
+    }
+    if (pend) {
+      const b = document.createElement('button');
+      b.className = 'btn small gold claim-all';
+      b.dataset.sfx = 'none';
+      b.textContent = 'Recoger todo (' + pend + ')';
+      b.onclick = () => {
+        const got = claimAll();
+        if (!got.n) return;
+        G.DB.commit();
+        G.Audio.sfx('buy');
+        if (G.UI.refreshCoins) G.UI.refreshCoins();
+        const bits = [];
+        if (got.t1) bits.push(got.t1 + (got.t1 === 1 ? ' ticket' : ' tickets'));
+        if (got.t10) bits.push(got.t10 + ' ×10');
+        if (got.coins) bits.push(got.coins + ' monedas');
+        if (got.sig) bits.push(got.sig + (got.sig === 1 ? ' ataque único' : ' ataques únicos'));
+        G.UI.toast('Recogidos ' + got.n + ' premios' + (bits.length ? ': ' + bits.join(', ') : ''), 4000);
+        if (dexFilter === 'claim') dexFilter = 'own';
+        openDex();
+      };
+      fb.appendChild(b);
+    }
     renderGrid();
     showDetail(dexSel);
+  }
+
+  // ---------------- premios por recoger (issue #1) ----------------
+  /** ¿Tiene este Pokémon algo que recoger? (misiones de su familia, si lo tienes, o su investigación) */
+  function hasPending(s, dex, own) {
+    if (G.Research.pendingLevels(s, dex) > 0) return true;
+    return own && G.Family.status(s, dex).some(x => x.done && !x.claimed);
+  }
+  /** Cuántos premios hay por recoger en total (cada misión y cada especie investigada cuentan uno). */
+  function pendingAll() {
+    const s = G.DB.save;
+    let n = 0;
+    const roots = new Set(Object.keys(s.owned).filter(d => G.DEX_BY[d]).map(d => G.Family.rootOf(d)));
+    for (const r of roots) n += G.Family.status(s, r).filter(x => x.done && !x.claimed).length;
+    for (const d in s.research || {}) if (G.Research.pendingLevels(s, d) > 0) n++;
+    return n;
+  }
+  /** Recoge todo lo pendiente. Devuelve el resumen { n, t1, t10, coins, sig }. */
+  function claimAll() {
+    const s = G.DB.save, got = { n: 0, t1: 0, t10: 0, coins: 0, sig: 0 };
+    const add = rw => { if (!rw) return; got.n++; for (const k in rw) if (k in got) got[k] += rw[k] || 0; };
+    const roots = new Set(Object.keys(s.owned).filter(d => G.DEX_BY[d]).map(d => G.Family.rootOf(d)));
+    for (const r of roots) for (const st of G.Family.status(s, r)) if (st.done && !st.claimed) add(G.Family.claim(s, r, st.def.id));
+    for (const d of Object.keys(s.research || {})) add(G.Research.claim(s, d));
+    return got;
   }
 
   function renderGrid() {
@@ -252,6 +308,8 @@ G.MenuUI = (() => {
       if (dexFilter === 'miss' && own) continue;
       if (dexFilter === 'shiny' && !sh) continue;
       if (/^\d$/.test(dexFilter) && p.rarity !== +dexFilter) continue;
+      const pend = hasPending(s, p.dex, own);
+      if (dexFilter === 'claim' && !pend) continue;
 
       const cell = document.createElement('div');
       cell.className = 'cell' + (own ? '' : ' locked') + (p.dex === dexSel ? ' on' : '');
@@ -260,6 +318,8 @@ G.MenuUI = (() => {
       else if (sh) cell.insertAdjacentHTML('beforeend', `<span class="badge-r" title="Tienes su shiny">${G.Icons.html('shiny', 12)}</span>`);
       // Familia buffada hoy (systems/buffs.js).
       if (own && G.Buffs.isBuffed(p.dex, s)) { cell.classList.add('buffed'); cell.insertAdjacentHTML('beforeend', `<span class="badge-buff" title="Buffado hoy">${G.Icons.html('up', 14)}</span>`); }
+      // Premios por recoger: marca dorada (abajo a la izquierda).
+      if (pend) { cell.classList.add('claim'); cell.insertAdjacentHTML('beforeend', `<span class="badge-claim" title="Premios por recoger">!</span>`); }
       const useShiny = sh && p.dex === s.partner && s.partnerShiny;
       cell.appendChild(G.UI.spriteCanvas(p.dex, 92, 80, { scale: 2, silhouette: !own, shadow: own, shiny: useShiny }));
       cell.insertAdjacentHTML('beforeend', `<b>${own ? p.name : '???'}</b>${G.UI.stars(p.rarity, 9)}`);

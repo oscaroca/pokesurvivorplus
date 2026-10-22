@@ -187,7 +187,7 @@ G.Kecleon = (() => {
     '{x} sube a Nv.{x}': '{x} goes up to Lv.{x}', '¡Kecleon ha abierto su tienda cerca! (60 s)': 'Kecleon has opened a shop nearby! (60 s)',
     'Kecleon ha cerrado la tienda': 'Kecleon has closed the shop', 'Gracias': 'Thanks', 'Tienda · {x} s': 'Shop · {x} s',
     'Se paga con las monedas de esta partida: lo que gastes no te lo llevas al acabar.': 'You pay with this run’s coins: what you spend you won’t take home.',
-    'Salir de la tienda': 'Leave the shop'
+    'Salir de la tienda': 'Leave the shop', 'Salir de la tienda ·': 'Leave the shop ·'
   });
 
   return { reset, update, drawable, drawHud, init, close, buy, get isOpen() { return isOpen(); } };

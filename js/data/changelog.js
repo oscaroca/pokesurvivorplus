@@ -6,6 +6,13 @@
  * Cada línea en español y en inglés.
  */
 G.CHANGELOG = [
+  { d: '2026-10-22', title: ['Recoger todo', 'Claim all'], new: [
+    ['En Pokémon, los que tienen misiones de familia o investigación por recoger llevan una marca dorada, hay un filtro «Por recoger» y un botón «Recoger todo» que lo recoge de una vez. (Gracias, 99MALM99.)',
+     'In Pokémon, those with family missions or research to claim have a gold mark, there is a «To claim» filter and a «Claim all» button that collects everything at once. (Thanks, 99MALM99.)']
+  ], chg: [
+    ['La tienda de Kecleon indica que se cierra con Esc.',
+     'Kecleon’s shop now shows that Esc closes it.']
+  ] },
   { d: '2026-10-16', title: ['Talentos, favoritos y ataques únicos', 'Talents, favourites and signature moves'], new: [
     ['Ataques favoritos: en la ficha de cada Pokémon marcas hasta 4 de sus movimientos con una estrella. Salen más a menudo en las cartas de nivel (con los 4 marcados, al menos uno en algo más de la mitad de las subidas), así es más fácil repetir tu build. Si tienes Repertorio, el segundo movimiento inicial sale de tus favoritos.',
      'Favourite moves: on each Pokémon’s page you can star up to 4 of its moves. They show up more often in the level-up cards (with all 4 starred, at least one in a bit over half of level-ups), so it is easier to repeat your build. With Repertoire, your second starting move comes from your favourites.'],

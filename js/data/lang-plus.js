@@ -21,5 +21,9 @@ if (G.I18n) G.I18n.add({
   'Siguiente nivel: shiny ×{x} ·': 'Next level: shiny ×{x} ·', '· nivel {x}/{x} · shiny ×{x}': '· level {x}/{x} · shiny ×{x}',
   '¡Premio de investigación recogido!': 'Research reward claimed!',
   'Las naturalezas son de toda la familia.': 'Natures are shared by the whole family.',
-  'Sácala con un repetido en el gacha o en la Guardería': 'Get it from a gacha duplicate or the Day Care'
+  'Sácala con un repetido en el gacha o en la Guardería': 'Get it from a gacha duplicate or the Day Care',
+  'Por recoger': 'To claim', 'Recoger todo ({x})': 'Claim all ({x})', 'Premios por recoger': 'Rewards to claim',
+  'Premios por recoger: {x}': 'Rewards to claim: {x}', 'Recogidos {x} premios': '{x} rewards claimed',
+  'Recogidos {x} premios: {x}': '{x} rewards claimed: {x}', 'ataque único': 'signature move', 'ataques únicos': 'signature moves',
+  'Salir de la tienda ·': 'Leave the shop ·'
 });
