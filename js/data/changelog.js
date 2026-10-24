@@ -6,6 +6,10 @@
  * Cada línea en español y en inglés.
  */
 G.CHANGELOG = [
+  { d: '2026-10-22', title: ['Aro de buffs más claro', 'Clearer buff ring'], fix: [
+    ['Los aros de estado de buffs ahora muestran una porción por cada acumulación activa, así Danza Espada, Agilidad y otros potenciadores reflejan el número exacto de multiplicadores activos.',
+     'Buff-status rings now show one segment per active stack, so Sword Dance, Agility and similar boosts reflect the exact number of active multipliers.']
+  ] },
   { d: '2026-10-22', title: ['Recoger todo', 'Claim all'], new: [
     ['En Pokémon, los que tienen misiones de familia o investigación por recoger llevan una marca dorada, hay un filtro «Por recoger» y un botón «Recoger todo» que lo recoge de una vez. (Gracias, 99MALM99.)',
      'In Pokémon, those with family missions or research to claim have a gold mark, there is a «To claim» filter and a «Claim all» button that collects everything at once. (Thanks, 99MALM99.)']

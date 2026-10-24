@@ -437,8 +437,12 @@ G.Player = class Player {
   addBuff(stat, amount, dur, maxStacks) {
     const b = this.buffs[stat];
     if (!b) return;
+    // El máximo de stacks no es fijo para todas las habilidades: puede subir
+    // con el nivel del movimiento. Guardamos ese límite real para que el aro
+    // visual pueda dibujar exactamente tantas porciones como permita esa buff.
     b.amount = amount;
-    b.n = Math.min(maxStacks, b.n + 1);
+    b.max = Math.max(1, maxStacks || b.max || 1);
+    b.n = Math.min(b.max, b.n + 1);
     b.t = dur;
   }
 
@@ -613,18 +617,29 @@ G.Player = class Player {
     this.anim.draw(ctx, this.x, this.y, { flash: this.flash > 0, softFlash: true, alpha, color: '#ffcb3d', tint });
 
     // Arcos de buff alrededor de los pies.
+    // Cada buff tiene un máximo real (`b.max`), que puede subir con el nivel del
+    // movimiento. El aro debe dibujarse con ese total de segmentos, y luego
+    // resaltar sólo las porciones que están activas (`b.n`).
     const COL = { atk: '#ff6b4d', spd: '#7fe0ff', def: '#b0b8c8', regen: '#5fe08a' };
     let i = 0;
     for (const k in this.buffs) {
       const b = this.buffs[k];
       if (b.n <= 0) continue;
+      const total = Math.max(1, b.max || b.n || 1);
+      const piece = (Math.PI * 2) / total;
+      const gap = piece * 0.18;
       ctx.save();
-      ctx.globalAlpha = 0.6;
-      ctx.strokeStyle = COL[k];
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.ellipse(this.x, this.y, this.r * 1.8 + i * 5, (this.r * 1.8 + i * 5) * 0.42, 0, 0, 6.2832 * (b.n / 5));
-      ctx.stroke();
+      for (let s = 0; s < total; s++) {
+        const active = s < b.n;
+        ctx.beginPath();
+        const start = -Math.PI / 2 + s * piece + gap * 0.5;
+        const end = start + piece - gap;
+        ctx.globalAlpha = active ? 0.9 : 0.16;
+        ctx.strokeStyle = COL[k];
+        ctx.lineWidth = active ? 2 : 1.2;
+        ctx.ellipse(this.x, this.y, this.r * 1.8 + i * 5, (this.r * 1.8 + i * 5) * 0.42, 0, start, end);
+        ctx.stroke();
+      }
       ctx.restore();
       i++;
     }
